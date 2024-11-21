@@ -4,7 +4,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { unoptimized: true },
+  images: { unoptimized: true, dangerouslyAllowSVG: true },
 };
 
 module.exports = nextConfig;

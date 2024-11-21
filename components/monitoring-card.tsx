@@ -1,17 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
+import PrometheusModal from "./rule-details-modal";
 
 interface MonitoringCardProps {
+  id: number;
   title: string;
   description: string;
   icon: React.ReactNode;
   alerts: number;
+  monitoringItems: any;
 }
 
-export function MonitoringCard({ title, description, icon, alerts }: MonitoringCardProps) {
+export function MonitoringCard({ id, title, description, icon, alerts, monitoringItems }: MonitoringCardProps) {
+
   return (
     <Card className="transition-all hover:shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -27,12 +30,10 @@ export function MonitoringCard({ title, description, icon, alerts }: MonitoringC
         )}
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className="text-sm text-gray-500">{description.slice(0, 180)}</p>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" size="sm" className="w-full">
-          View Alert Rules
-        </Button>
+        <PrometheusModal rules={monitoringItems} />
       </CardFooter>
     </Card>
   );
