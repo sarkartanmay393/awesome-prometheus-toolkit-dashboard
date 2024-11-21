@@ -67,7 +67,7 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
               </span>
             </div>
           </div>
-          <hr className="w-[440px] m-0 p-0" />
+          <hr className="w-full m-0 p-0" />
         </div>
 
         <div className="px-6 py-4 space-y-6 overflow-y-scroll overflow-x-hidden border-black h -[500px]">
@@ -89,7 +89,7 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
 const RuleView = ({ rule, count, copiedId }: any) => {
   const code = convertRuleToYamlString(rule);
   return (
-    <div className="flex gap-4 h-f it">
+    <div className="flex gap-4 bo rder border-red-500">
       {/* count */}
       <div className={cn("flex items-start justify-center", Object.keys(rule).length < 1 ? 'invisible' : '')}>
         <div className="flex items-center justify-center w-[40px] h-[40px] rounded-full bg-slate-100 text-slate-500 text-[12px] font-[700]">
@@ -106,8 +106,9 @@ const RuleView = ({ rule, count, copiedId }: any) => {
             {rule?.description}
           </p>
         </div>
-        <div className={cn("relative", code.trim()=='{}' ? 'hidden' : '')}>
-          <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">
+        {/* codeblock */}
+        <div className={cn("bo rder border-red-500 relative", code.trim()=='{}' ? 'hidden' : '')}>
+          <pre role='contentinfo' className="bg-slate-50 p-2 rounded text-xs overflow-x-scroll" style={{ whiteSpace: 'pre-wrap' }}>
             {code}
           </pre>
           <Button
