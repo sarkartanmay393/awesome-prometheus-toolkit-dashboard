@@ -1,101 +1,111 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 import { useState } from "react";
-import { LightbulbIcon as LucideProps } from "lucide-react";
 import dynamic from "next/dynamic";
 
-const XIcon = dynamic(() => import("lucide-react").then((mod) => mod.X));
 const CopyIcon = dynamic(() => import("lucide-react").then((mod) => mod.Copy));
 const CheckIcon = dynamic(() =>
   import("lucide-react").then((mod) => mod.Check)
 );
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RuleDetailsProps } from "@/types";
+import { Service } from "@/types";
+import SVGWrapper from "./svg-wrapper";
+import { convertRuleToYamlString } from "@/lib/utils";
 
 type PrometheusModalProps = {
-  rules?: any[];
+  service?: Service;
 };
 
-export default function PrometheusModal({ rules = [] }: PrometheusModalProps) {
-  const [copiedId, setCopiedId] = useState<number | null>(null);
+export default function PrometheusModal({ service }: PrometheusModalProps) {
+  const [copiedId, setCopiedId] = useState<string>("");
 
-  const copyToClipboard = (text: string, id: number) => {
+  const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+    setTimeout(() => setCopiedId(""), 2000);
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full border-slate-200 text-slate-600 text-[12px] font-[600]"
+        >
           View Alert Rules
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <Card className="w-full max-w-lg bg-white">
-          <CardHeader className="flex justify-between items-center p-4 border-b">
-            <div className="flex items-center space-x-2">
-              <h1 className="text-lg font-semibold">
-                Prometheus self-monitoring
-              </h1>
-              <span className="text-sm text-muted-foreground">
-                {rules.length} RULES
+      <DialogContent className="max-w-[95%] sm:max-w-[784px] h-[556px] rounded-sm p-0 gap-0 overflow-hidden">
+        <div className="flex flex-col py-4 gap-2 h-[56px] bord er-2">
+          <div className="flex items-center max-h-[56px] px-6">
+            <div className="flex items-center gap-2">
+              <SVGWrapper
+                svgCode={service?.icon}
+                alt={""}
+                width={20}
+                height={20}
+              />
+              <h3 className="font-[700] text-md text-slate-600">
+                {service?.name}
+              </h3>
+              <span className="p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px]">
+                {service?.totalRules ?? 0} Rules
               </span>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              //   onClick={() => setIsOpen(false)}
-            >
-              <XIcon className="w-5 h-5" />
-            </Button>
-          </CardHeader>
-          <CardContent className="p-4 space-y-4 overflow-auto">
-            {rules.map((rule) => (
-              <div key={rule.id} className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-xs font-medium">
-                    {String(rule.id).padStart(2, "0")}
-                  </div>
-                  <h2 className="text-sm font-medium">{rule.title}</h2>
+          </div>
+          <hr className="w-[440px] m-0 p-0" />
+        </div>
+
+        <div className="px-6 space-y-6 overflow-auto h-[ 500] bo rder-2">
+          {service?.exporters?.[0]?.rules?.map((rule, count) => (
+            <div key={count} className="flex gap-4">
+              {/* count */}
+              <div className="flex items-center items-center">
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-xs font-medium">
+                  {String(count)}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {rule.description}
-                </p>
+              </div>
+              {/* content */}
+              <div className="flex flex-col gap-4">
+                <div className="space-y-1">
+                  <h2 className="text-[14px] font-[500] text-slate-600">
+                    {rule?.name}
+                  </h2>
+                  <p className="text-[12px] text-slate-500 font-[500]">
+                    {rule?.description}
+                  </p>
+                </div>
                 <div className="relative">
                   <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">
-                    {rule.code}
+                    {convertRuleToYamlString(rule)}
                   </pre>
                   <Button
                     variant="ghost"
                     size="icon"
                     className="absolute top-2 right-2"
-                    onClick={() => copyToClipboard(rule.code, rule.id)}
+                    // onClick={() => copyToClipboard(rule.code, rule.id)}
                   >
-                    {copiedId === rule.id ? (
-                      <CheckIcon className="w-4 h-4 text-green-500" />
+                    {copiedId === rule?.name ? (
+                      <>
+                        <CheckIcon className="w-4 h-4 text-green-500" />
+                        Copied
+                      </>
                     ) : (
-                      <CopyIcon className="w-4 h-4" />
+                      <>
+                        <CopyIcon className="w-4 h-4" />
+                        Copy
+                      </>
                     )}
                   </Button>
                 </div>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+            </div>
+          ))}
+        </div>
       </DialogContent>
     </Dialog>
   );

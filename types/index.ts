@@ -22,14 +22,17 @@ export interface RuleDetailsProps {
 }
 
 export interface Exporter {
-  name: string;
-  slug: string;
-  rules: Rule[];
+  name?: string;
+  slug?: string;
+  rules?: Rule[];
 }
 
 export interface Service {
-  name: string;
-  exporters: Exporter[];
+  icon?: any;
+  name?: string;
+  description?: string;
+  totalRules?: number;
+  exporters?: Exporter[];
 }
 
 export interface Group {

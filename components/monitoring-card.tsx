@@ -1,40 +1,33 @@
 "use client";
 
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
 import PrometheusModal from "./rule-details-modal";
+import type { Service } from "@/types";
+import SVGWrapper from "./svg-wrapper";
 
 interface MonitoringCardProps {
-  id: number;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  alerts: number;
-  monitoringItems: any;
+  service: Service;
 }
 
-export function MonitoringCard({ id, title, description, icon, alerts, monitoringItems }: MonitoringCardProps) {
-
+export function MonitoringCard({ service }: MonitoringCardProps) {
   return (
-    <Card className="transition-all hover:shadow-md">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card className="transition-all shadow-none border-slate-100 border-[1px] rounded-sm pt-3">
+      <CardContent className="flex flex-col justify-center gap-4 p-6">
         <div className="flex items-center gap-2">
-          {icon}
-          <h3 className="font-semibold">{title}</h3>
+          <SVGWrapper svgCode={service.icon} alt={""} width={20} height={20} />
+          <h3 className="font-[700] text-md text-slate-600">{service?.name}</h3>
         </div>
-        {alerts > 0 && (
-          <div className="flex items-center gap-1 rounded-full bg-red-100 px-2 py-1">
-            <AlertCircle className="h-4 w-4 text-red-500" />
-            <span className="text-sm font-medium text-red-500">{alerts}</span>
-          </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-gray-500">{description.slice(0, 180)}</p>
+        <p className="text-[12px] text-slate-400">
+          <span className="p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px] mr-1.5">
+            {service?.totalRules ?? 0} Rules
+          </span>
+          {service?.description?.slice(0, 180)}...
+        </p>
+        <PrometheusModal service={service} />
       </CardContent>
-      <CardFooter>
-        <PrometheusModal rules={monitoringItems} />
-      </CardFooter>
     </Card>
   );
 }
