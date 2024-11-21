@@ -11,9 +11,9 @@ const CheckIcon = dynamic(() =>
 );
 
 import { Button } from "@/components/ui/button";
-import { Service } from "@/types";
+import { Rule, Service } from "@/types";
 import SVGWrapper from "./svg-wrapper";
-import { convertRuleToYamlString } from "@/lib/utils";
+import { cn, convertRuleToYamlString } from "@/lib/utils";
 
 type PrometheusModalProps = {
   service?: Service;
@@ -28,6 +28,15 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
     setTimeout(() => setCopiedId(""), 2000);
   };
 
+
+  // hack
+  if (service?.exporters?.[0].rules) {
+    service.exporters[0].rules =
+      (service?.exporters?.[0]?.rules?.length ?? 0) < 3
+        ? [...service?.exporters?.[0]?.rules, {} as Rule, {} as Rule, {} as Rule, {} as Rule]
+        : service?.exporters?.[0]?.rules;
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -39,8 +48,9 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
           View Alert Rules
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[95%] sm:max-w-[784px] h-[556px] rounded-sm p-0 gap-0 overflow-hidden">
-        <div className="flex flex-col py-4 gap-2 h-[56px] bord er-2">
+      <DialogContent className="max-w-[95%] sm:max-w-[784px] h-[556px] rounded-sm p-0 gap-0 overflow-hidden ">
+        {/* <div className="overflow-y-scroll"> */}
+        <div className="flex flex-col py-4 gap-2 h-[56px] border-black">
           <div className="flex items-center max-h-[56px] px-6">
             <div className="flex items-center gap-2">
               <SVGWrapper
@@ -60,53 +70,66 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
           <hr className="w-[440px] m-0 p-0" />
         </div>
 
-        <div className="px-6 space-y-6 overflow-auto h-[ 500] bo rder-2">
+        <div className="px-6 py-4 space-y-6 overflow-y-scroll overflow-x-hidden border-black h -[500px]">
           {service?.exporters?.[0]?.rules?.map((rule, count) => (
-            <div key={count} className="flex gap-4">
-              {/* count */}
-              <div className="flex items-center items-center">
-                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-xs font-medium">
-                  {String(count)}
-                </div>
-              </div>
-              {/* content */}
-              <div className="flex flex-col gap-4">
-                <div className="space-y-1">
-                  <h2 className="text-[14px] font-[500] text-slate-600">
-                    {rule?.name}
-                  </h2>
-                  <p className="text-[12px] text-slate-500 font-[500]">
-                    {rule?.description}
-                  </p>
-                </div>
-                <div className="relative">
-                  <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">
-                    {convertRuleToYamlString(rule)}
-                  </pre>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2"
-                    // onClick={() => copyToClipboard(rule.code, rule.id)}
-                  >
-                    {copiedId === rule?.name ? (
-                      <>
-                        <CheckIcon className="w-4 h-4 text-green-500" />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <CopyIcon className="w-4 h-4" />
-                        Copy
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <RuleView
+              key={count}
+              rule={rule}
+              count={count}
+              copiedId={copiedId}
+            />
           ))}
         </div>
+        {/* </div> */}
       </DialogContent>
     </Dialog>
   );
 }
+
+const RuleView = ({ rule, count, copiedId }: any) => {
+  const code = convertRuleToYamlString(rule);
+  return (
+    <div className="flex gap-4 h-f it">
+      {/* count */}
+      <div className={cn("flex items-start justify-center", Object.keys(rule).length < 1 ? 'invisible' : '')}>
+        <div className="flex items-center justify-center w-[40px] h-[40px] rounded-full bg-slate-100 text-slate-500 text-[12px] font-[700]">
+          {String(++count).padStart(2, "0")}
+        </div>
+      </div>
+      {/* content */}
+      <div className="flex flex-col gap-4">
+        <div className="space-y-1">
+          <h2 className="text-[14px] font-[500] text-slate-600">
+            {rule?.name}
+          </h2>
+          <p className="text-[12px] text-slate-500 font-[500]">
+            {rule?.description}
+          </p>
+        </div>
+        <div className={cn("relative", code.trim()=='{}' ? 'hidden' : '')}>
+          <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">
+            {code}
+          </pre>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-2 right-2"
+            // onClick={() => copyToClipboard(rule.code, rule.id)}
+          >
+            {copiedId === rule?.name ? (
+              <>
+                <CheckIcon className="w-4 h-4 text-green-500" />
+                Copied
+              </>
+            ) : (
+              <>
+                <CopyIcon className="w-4 h-4" />
+                Copy
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
