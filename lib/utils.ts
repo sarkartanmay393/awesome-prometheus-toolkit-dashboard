@@ -13,19 +13,20 @@ export function getMatchingIcon(service: Service, iconList: string[]): string | 
   let bestMatch: string | undefined;
   let highestScore = 0;
 
-  iconList.forEach(iconName => {
-    const iconNameLower = iconName.toLowerCase();
+  iconList.forEach(iconName => { // o(n)
+    const iconNameLower = iconName.toLowerCase(); // can be optimised as this doesn't change often
     let score = 0;
 
-    if (serviceText.includes(iconNameLower)) {
+    if (serviceText.includes(iconNameLower)) { // o(m)
       score = iconNameLower.length;
     } else {
       const nameWords = service.name?.toLowerCase().split(' ') || [];
       const descriptionWords = service.description?.toLowerCase().split(' ') || [];
-      const allWords = [...nameWords, ...descriptionWords];
+      const allWords = [...nameWords, ...descriptionWords]; // k elements
+      const allWordsSet = new Set(allWords);
 
-      allWords.forEach(word => {
-        if (iconNameLower.includes(word)) {
+      allWordsSet.forEach(word => { // o(k) - lets reduct to o(1)
+        if (iconNameLower.includes(word)) { //o(l)
           score += word.length;
         }
       });

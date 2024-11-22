@@ -127,7 +127,7 @@ const mergeData = (
           slug: exporter.slug,
           rules: exporter.rules?.map((rule) => {
             const correspondingRule = exactRulesFromRulesBySlug.find((r) =>
-              r?.annotations?.summary.includes(rule.name)
+              r?.annotations?.summary?.includes(rule.name)
             );
             return {
               name: rule.name,
@@ -154,7 +154,7 @@ export const main = () => {
   // fs.writeFileSync(path.join(process.cwd(),"assets/rulesBySlugg.json"), JSON.stringify(rulesBySlug, null, 2));
 
   const mergedData = mergeData(groups, rulesBySlug);
-  // fs.writeFileSync(path.join(process.cwd(),"assets/merged.json"), JSON.stringify(mergedData, null, 2));
+  fs.writeFileSync(path.join(process.cwd(),"assets/merged.json"), JSON.stringify(mergedData, null, 2));
 
   // console.log(JSON.stringify(mergedData, null, 2));
 };
