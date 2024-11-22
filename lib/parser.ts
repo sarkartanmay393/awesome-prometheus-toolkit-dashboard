@@ -112,7 +112,7 @@ const mergeData = (
   rulesBySlug: { [slug: string]: { rules: Rule[]; name: string } }
 ) => {
   return groups?.map((group) => ({
-    groupName: group.name,
+    groupName: group.groupName,
     services: group.services.map((service) => ({
       name: service.name,
       description: service?.exporters
