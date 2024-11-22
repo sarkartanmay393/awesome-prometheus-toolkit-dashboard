@@ -11,14 +11,14 @@ import useSearch from "@/hooks/use-search";
 import { Loader2Icon } from "lucide-react";
 const ICONS = Object.keys(icons);
 
-console.log('home', new Date().getSeconds())
+// console.log('home', new Date().getSeconds())
 export default function Home() {
-  console.log('home inside', new Date().getSeconds())
+  // console.log('home inside', new Date().getSeconds())
   const { data, onSearch, isSearching } = useSearch();
-  console.log('home inside after useSearch', new Date().getSeconds())
+  // console.log('home inside after useSearch', new Date().getSeconds())
 
 
-  console.log(isSearching);
+  // console.log(isSearching);
 
   return (
     <main className="flex flex-col py-12 gap-4">
@@ -28,7 +28,7 @@ export default function Home() {
         {isSearching ? (
           <Loader2Icon className="animate-spin duration-300 w-8 h-8" />
         ) : (
-          data.map((group) => (
+          !data.length ? <p>No items found!</p>  : data.map((group) => (
             <Fragment key={group.groupName}>
               <h4 className="text-slate-400 font-[700] text-[10px] uppercase">
                 {group.groupName}

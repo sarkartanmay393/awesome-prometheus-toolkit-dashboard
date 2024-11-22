@@ -25,18 +25,18 @@ const fuseOptions = {
 export default function useSearch() {
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData] = useState(PrometheusData);
-  console.log("before fuzzy instance creation", new Date().getSeconds());
+  // console.log("before fuzzy instance creation", new Date().getSeconds());
   const fuseInstance = useMemo(() => new Fuse(PrometheusData, fuseOptions), []);
-  console.log("after fuzzy instance creation", new Date().getSeconds());
+  // console.log("after fuzzy instance creation", new Date().getSeconds());
 
   const getFilteredData = useCallback(
     (searchValue: string) => {
       if (searchValue.length) {
-        console.log("fuzzy search started", new Date().getSeconds());
+        // console.log("fuzzy search started", new Date().getSeconds());
         const fuzeResult = fuseInstance.search(searchValue);
-        console.log("fuzzy search finished", new Date().getSeconds());
+        // console.log("fuzzy search finished", new Date().getSeconds());
         // console.log('fuze', fuzeResult);
-        console.log("fuzzy result filtering", new Date().getSeconds());
+        // console.log("fuzzy result filtering", new Date().getSeconds());
         return fuzeResult.map((foundItem) => {
           const { matches, score = 1, item: group } = foundItem;
           const matchedServices = group.services.filter((service) => {
@@ -51,7 +51,7 @@ export default function useSearch() {
                 )
               : true;
           });
-          console.log("fuzzy result filtered", new Date().getSeconds());
+          // console.log("fuzzy result filtered", new Date().getSeconds());
           return {
             ...group,
             services: matchedServices,
@@ -64,7 +64,7 @@ export default function useSearch() {
   );
 
   const onSearch = (searchValue: string) => {
-    console.log("triggered onSearch", new Date().getSeconds());
+    // console.log("triggered onSearch", new Date().getSeconds());
     setIsSearching(true);
     // console.log('is searching')
     const data = getFilteredData(searchValue);
