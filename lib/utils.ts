@@ -52,3 +52,25 @@ export const convertRuleToYamlString = (rule: Rule): string => {
 
   return jsYaml.dump(yamlObject, { lineWidth: -1 });
 };
+
+export function createThrottler(fn: Function, delay: number) {
+  let lastCall = 0;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (...args: any[]) {
+    const now = Date.now();
+
+    if (now - lastCall < delay) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        lastCall = now;
+        fn(...args);
+      }, delay - (now - lastCall));
+    } else {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+}

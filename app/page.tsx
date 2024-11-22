@@ -17,9 +17,6 @@ export default function Home() {
   const { data, onSearch, isSearching } = useSearch();
   // console.log('home inside after useSearch', new Date().getSeconds())
 
-
-  // console.log(isSearching);
-
   return (
     <main className="flex flex-col py-12 gap-4">
       <h2 className="text-slate-600 font-[500] text-[20px]">Browse Library</h2>
@@ -27,8 +24,10 @@ export default function Home() {
       <div className="flex flex-col gap-4">
         {isSearching ? (
           <Loader2Icon className="animate-spin duration-300 w-8 h-8" />
+        ) : data.length < 1 ? (
+          <p>No items found!</p>
         ) : (
-          !data.length ? <p>No items found!</p>  : data.map((group) => (
+          data.map((group) => (
             <Fragment key={group.groupName}>
               <h4 className="text-slate-400 font-[700] text-[10px] uppercase">
                 {group.groupName}
