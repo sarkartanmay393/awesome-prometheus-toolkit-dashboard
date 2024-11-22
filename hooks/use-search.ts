@@ -1,72 +1,82 @@
 import Fuse from "fuse.js";
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback } from "react";
 import PrometheusData from "@/assets/merged.json";
 
+const THRESHOLD = 0.2;
 const fuseOptions = {
   keys: [
     "groupName",
     "services.name",
-    "services.description",
+    // "services.description",
     // "services.exporters.name",
     // "services.exporters.rules.name",
     // "services.exporters.rules.description",
     // "services.exporters.rules.query",
     // "services.exporters.rules.severity",
   ],
+  threshold: THRESHOLD,
+  includeScore: true,
+  includeMatches: true,
+  minMatchCharLength: 1,
+  shouldSort: true,
+  findAllMatches: true,
 };
 
-function throttle(func: (...args: any[]) => void, limit: number) {
-  let lastFunc: ReturnType<typeof setTimeout> | undefined;
-  let lastRan: number | undefined;
-  return function (this: unknown, ...args: any[]) {
-    if (!lastRan) {
-      func.apply(this, args);
-      lastRan = Date.now();
-    } else {
-      clearTimeout(lastFunc);
-      lastFunc = setTimeout(() => {
-        if (Date.now() - lastRan! >= limit) {
-          func.apply(this, args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
-    }
-  };
-}
-
-const ThrottleLimit = 2000;
-
 export default function useSearch() {
-  const [searchValue, setSearchValue] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData] = useState(PrometheusData);
+  console.log("before fuzzy instance creation", new Date().getSeconds());
   const fuseInstance = useMemo(() => new Fuse(PrometheusData, fuseOptions), []);
+  console.log("after fuzzy instance creation", new Date().getSeconds());
 
   const getFilteredData = useCallback(
     (searchValue: string) => {
       if (searchValue.length) {
-        return fuseInstance.search(searchValue).map((found) => ({
-          ...found.item,
-        }));
+        console.log("fuzzy search started", new Date().getSeconds());
+        const fuzeResult = fuseInstance.search(searchValue);
+        console.log("fuzzy search finished", new Date().getSeconds());
+        // console.log('fuze', fuzeResult);
+        console.log("fuzzy result filtering", new Date().getSeconds());
+        return fuzeResult.map((foundItem) => {
+          const { matches, score = 1, item: group } = foundItem;
+          const matchedServices = group.services.filter((service) => {
+            return matches && matches.length
+              ? matches.some(
+                  (match) =>
+                    fuseOptions.keys.includes(match.key ?? "") &&
+                    [group.groupName, service.name].includes(
+                      match.value ?? ""
+                    ) &&
+                    score <= THRESHOLD
+                )
+              : true;
+          });
+          console.log("fuzzy result filtered", new Date().getSeconds());
+          return {
+            ...group,
+            services: matchedServices,
+          };
+        });
       }
       return PrometheusData;
     },
     [fuseInstance]
   );
 
-  const throttledGetFilteredData = useCallback(
-    throttle((searchValue: string) => {
-      setFilteredData(getFilteredData(searchValue));
-    }, ThrottleLimit),
-    [fuseInstance]
-  );
-
-  useEffect(() => {
-    throttledGetFilteredData(searchValue);
-  }, [searchValue, throttledGetFilteredData]);
+  const onSearch = (searchValue: string) => {
+    console.log("triggered onSearch", new Date().getSeconds());
+    setIsSearching(true);
+    // console.log('is searching')
+    const data = getFilteredData(searchValue);
+    setFilteredData(data);
+    setIsSearching(false);
+    // console.log(data)
+    // console.log('searched')
+  };
 
   return {
     data: filteredData,
-    searchValue,
-    onChange: setSearchValue,
+    onSearch,
+    isSearching,
   };
 }
