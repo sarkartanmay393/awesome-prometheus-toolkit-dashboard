@@ -1,21 +1,21 @@
 "use client";
 
+import { GlobalContext } from "@/app/context";
 import { Input } from "@/components/ui/input";
 import { createThrottler } from "@/lib/utils";
 import { Loader2Icon, Search as SearchIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useContext, useState } from "react";
 
 type Props = {
   onSearch?: (searchValue: string) => void;
 };
 
 export function Search({ onSearch }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { searchLoading } = useContext(GlobalContext);
   const [localSearchValue, setLocalSearchValue] = useState("");
   const throttledSearch = useCallback(
     createThrottler((value: string) => {
       if (onSearch) {
-        setIsLoading(true);
         onSearch(value);
       }
     }, 3000),
@@ -23,11 +23,17 @@ export function Search({ onSearch }: Props) {
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    setIsLoading(false);
     if (e.key === "Enter") {
       throttledSearch(localSearchValue);
     }
   };
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLocalSearchValue(e.currentTarget.value);
+    // if (!e.target.value.trim()) {
+      // throttledSearch('');
+    // }
+  }
 
   return (
     <div className="relative">
@@ -36,10 +42,10 @@ export function Search({ onSearch }: Props) {
         placeholder="Search for a component..."
         className="w-full px-8 rounded-sm"
         value={localSearchValue}
-        onChange={(e) => setLocalSearchValue(e.currentTarget.value)}
+        onChange={onChange}
         onKeyDown={handleKeyDown}
       />
-      {isLoading && (
+      {searchLoading && (
         <Loader2Icon className="animate-spin absolute right-2.5 top-3 h-4 w-4 text-gray-400" />
       )}
     </div>

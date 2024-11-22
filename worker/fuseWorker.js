@@ -1,7 +1,8 @@
 import Fuse from "fuse.js";
+import MergedJson from "../assets/merged.json";
 
 const THRESHOLD = 0.2;
-const fuseOptions = {
+const FuseOptions = {
   keys: [
     "groupName",
     "services.name",
@@ -23,16 +24,20 @@ const fuseOptions = {
 let fuseInstance;
 
 onmessage = function (e) {
-  const { type, data, searchValue } = e.data;
+  const { type, searchValue } = e.data;
 
   switch (type) {
     case "init": {
-      fuseInstance = new Fuse(data, fuseOptions);
+      fuseInstance = new Fuse(MergedJson, FuseOptions);
       console.log(`worker, type: 'init', status: 'initialized'`);
-      postMessage({ type: "init", status: "initialized", results: data });
+      postMessage({ type: "init", results: MergedJson });
     }
     case "search": {
       if (fuseInstance) {
+        if (!searchValue?.trim()) {
+            postMessage({ type: "search", results: MergedJson });;
+            return;
+        }
         const fuzzyResult = fuseInstance.search(searchValue);
         const results = formatFuzzyResult(fuzzyResult);
         console.log(`worker, type: 'search', results: '[]'`);
@@ -49,9 +54,9 @@ const formatFuzzyResult = (fuzzyResult) => {
       return matches && matches.length
         ? matches.some(
             (match) =>
-              fuseOptions.keys.includes(match.key ?? "") &&
+              FuseOptions.keys.includes(match.key ?? "") &&
               [group.groupName, service.name].includes(match.value ?? "") &&
-              score <= 0.2
+              score <= 0.3
           )
         : true;
     });

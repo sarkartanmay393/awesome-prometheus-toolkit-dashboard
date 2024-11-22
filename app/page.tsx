@@ -8,20 +8,17 @@ import { Service } from "@/types";
 import * as icons from "simple-icons";
 import { getMatchingIcon } from "@/lib/utils";
 import useSearch from "@/hooks/use-search";
-import { Loader2Icon } from "lucide-react";
 const ICONS = Object.keys(icons);
 
 export default function Home() {
-  const { data, onSearch, isSearching } = useSearch();
+  const { data, onSearch } = useSearch();
 
   return (
     <main className="flex flex-col py-12 gap-4">
       <h2 className="text-slate-600 font-[500] text-[20px]">Browse Library</h2>
       <Search onSearch={onSearch} />
       <div className="flex flex-col gap-4">
-        {isSearching ? (
-          <Loader2Icon className="animate-spin duration-300 w-8 h-8" />
-        ) : data.length < 1 ? (
+        {data.length < 1 ? (
           <p>No items found!</p>
         ) : (
           data.map((group) => (

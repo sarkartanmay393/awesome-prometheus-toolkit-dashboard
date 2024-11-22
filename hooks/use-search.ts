@@ -1,25 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import PrometheusData from "@/assets/merged.json";
 import { Group } from "@/types";
+import { GlobalContext } from "@/app/context";
+import { useState, useEffect, useContext } from "react";
 
 export default function useSearch() {
-  const [isSearching, setIsSearching] = useState(false);
+  const { setSearchLoading } = useContext(GlobalContext);
   const [filteredData, setFilteredData] = useState<Group[]>([]);
   const [worker, setWorker] = useState<Worker | null>(null);
 
   let onSearch = (searchValue: string) => {
     if (worker) {
-      setIsSearching(true);
-      if (searchValue.trim()) {
-        worker.postMessage({ type: "search", searchValue });
-      } else {
-        setFilteredData(PrometheusData);
-        setIsSearching(false);
-      }
+      setSearchLoading && setSearchLoading(true);
+      worker.postMessage({ type: "search", searchValue });
     } else {
       console.log("worker not available");
+      setSearchLoading && setSearchLoading(false);
     }
   };
 
@@ -28,10 +24,7 @@ export default function useSearch() {
       new URL("../worker/fuseWorker.js", import.meta.url)
     );
 
-    newWorker.postMessage({
-      type: "init",
-      data: PrometheusData
-    });
+    newWorker.postMessage({ type: "init" });
 
     newWorker.onmessage = (e) => {
       // console.log("react onmessage", e);
@@ -39,11 +32,12 @@ export default function useSearch() {
       switch (type) {
         case "search": {
           setFilteredData(results || []);
-          setIsSearching(false);
+          setSearchLoading && setSearchLoading(false);
         }
         case "init": {
           console.log("worker connection established!");
           setFilteredData(results || []);
+          setSearchLoading && setSearchLoading(false);
         }
       }
     };
@@ -59,6 +53,5 @@ export default function useSearch() {
   return {
     data: filteredData,
     onSearch,
-    isSearching,
   };
 }
