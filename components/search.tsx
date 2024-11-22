@@ -19,7 +19,7 @@ export function Search({ onSearch }: Props) {
         onSearch(value);
       }
     }, 3000),
-    []
+    [onSearch]
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

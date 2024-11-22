@@ -1,26 +1,3 @@
-export interface RuleYML {
-  groups: {
-    name: string;
-    rules: {
-      alert: string;
-      expr: string;
-      for: string;
-      labels: { severity: "critical" | string };
-      annotations: {
-        summary: string;
-        description: string;
-      };
-    }[];
-  }[];
-}
-
-export interface RuleDetailsProps {
-  id: number;
-  title: string;
-  description: string;
-  code: string;
-}
-
 export interface Exporter {
   name?: string;
   slug?: string;
@@ -36,7 +13,7 @@ export interface Service {
 }
 
 export interface Group {
-  name: string;
+  groupName: string;
   services: Service[];
 }
 

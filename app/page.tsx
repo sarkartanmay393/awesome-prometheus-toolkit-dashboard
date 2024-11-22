@@ -11,11 +11,8 @@ import useSearch from "@/hooks/use-search";
 import { Loader2Icon } from "lucide-react";
 const ICONS = Object.keys(icons);
 
-// console.log('home', new Date().getSeconds())
 export default function Home() {
-  // console.log('home inside', new Date().getSeconds())
   const { data, onSearch, isSearching } = useSearch();
-  // console.log('home inside after useSearch', new Date().getSeconds())
 
   return (
     <main className="flex flex-col py-12 gap-4">
