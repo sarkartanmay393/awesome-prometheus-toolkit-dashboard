@@ -1,5 +1,5 @@
 import Link from "next/link";
-import SVGWrapper from "./svg-wrapper";
+import SVGWrapper from "../svg-wrapper";
 import GetLast9Logo from "@/assets/getLast9Icon";
 import { GITHUB_REPO } from "@/lib/constants";
 

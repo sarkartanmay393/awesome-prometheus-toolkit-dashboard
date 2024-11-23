@@ -31,8 +31,8 @@ export default function ContextWrapper({ children }: any) {
     setSearchLoading,
     worker,
     setWorker,
-    initialLoading, 
-    setInitialLoading
+    initialLoading,
+    setInitialLoading,
   };
 
   return (

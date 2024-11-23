@@ -1,12 +1,13 @@
 "use client";
 
+import { useContext } from "react";
+
+import { Service } from "@/types";
 import { Search } from "@/components/search";
 import { MonitoringCard } from "@/components/monitoring-card";
-import { useContext } from "react";
-import { Service } from "@/types";
 
 import useSearch from "@/hooks/use-search";
-import { GlobalContext } from "./context";
+import { GlobalContext } from "@/app/context";
 import HompageSkeleton from "@/components/home-page-skeleton";
 
 export default function Home() {

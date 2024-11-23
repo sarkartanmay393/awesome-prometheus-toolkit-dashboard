@@ -1,7 +1,7 @@
 import Fuse from "fuse.js";
-import MergedJson from "../assets/merged.json";
+import MergedJson from "@/assets/merged.json";
 
-import * as icons from '@icons-pack/react-simple-icons';
+import * as icons from "@icons-pack/react-simple-icons";
 const ICONS = Object.keys(icons);
 
 const THRESHOLD = 0.2;
@@ -40,8 +40,8 @@ onmessage = function (e) {
       if (fuseInstance) {
         if (!searchValue?.trim()) {
           const modifiedJson = addIconToMergedJson(MergedJson);
-            postMessage({ type: "search", results: modifiedJson });;
-            return;
+          postMessage({ type: "search", results: modifiedJson });
+          return;
         }
         const fuzzyResult = fuseInstance.search(searchValue);
         const results = formatFuzzyResult(fuzzyResult);
@@ -76,11 +76,11 @@ const addIconToMergedJson = (mergedJson) => {
   return mergedJson.map((group) => ({
     ...group,
     services: group.services.map(addIconEleToService),
-  }))
-}
+  }));
+};
 
 const addIconEleToService = (service) => {
-  let icon = getMatchingIcon(service, ICONS) || '';
+  let icon = getMatchingIcon(service, ICONS) || "";
   icon = icon.includes("Hex") ? icon.replace("Hex", "") : icon;
   service.icon = icon;
   return service;
@@ -91,20 +91,25 @@ function getMatchingIcon(service, iconList) {
   let bestMatch;
   let highestScore = 0;
 
-  iconList.forEach(iconName => { // o(n)
+  iconList.forEach((iconName) => {
+    // o(n)
     const iconNameLower = iconName.toLowerCase(); // can be optimised as this doesn't change often
     let score = 0;
 
-    if (serviceText.includes(iconNameLower)) { // o(m)
+    if (serviceText.includes(iconNameLower)) {
+      // o(m)
       score = iconNameLower.length;
     } else {
-      const nameWords = service.name?.toLowerCase().split(' ') || [];
-      const descriptionWords = service.description?.toLowerCase().split(' ') || [];
+      const nameWords = service.name?.toLowerCase().split(" ") || [];
+      const descriptionWords =
+        service.description?.toLowerCase().split(" ") || [];
       const allWords = [...nameWords, ...descriptionWords]; // k elements
       const allWordsSet = new Set(allWords);
 
-      allWordsSet.forEach(word => { // o(k) - lets reduct to o(1)
-        if (iconNameLower.includes(word)) { //o(l)
+      allWordsSet.forEach((word) => {
+        // o(k) - lets reduct to o(1)
+        if (iconNameLower.includes(word)) {
+          //o(l)
           score += word.length;
         }
       });

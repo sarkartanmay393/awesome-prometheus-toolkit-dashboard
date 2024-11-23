@@ -8,9 +8,10 @@ Welcome to the **Awesome Prometheus Toolkit Dashboard**! This project is a compr
 ...
 <!-- - **Real-time Monitoring**: Visualize and track your Prometheus metrics in real-time. -->
 <!-- - **Customizable Themes**: Switch between light and dark modes to suit your preference. -->
-<!-- - **Responsive Design**: Enjoy a seamless experience across all devices. -->
-<!-- - **Extensive Icon Library**: Leverage a wide range of icons for better visualization. -->
-<!-- - **Alert Management**: View and manage alert rules with ease. -->
+- **Alert Management**: View and manage alert rules with ease.
+- **Responsive Design**: Enjoy a seamless experience across all devices.
+- **Extensive Icon Library**: Leverage a wide range of icons for better visualization.
+- **Offload Heavy Client Computations**: Offloaded fuse.js and icon matching operations to a dedicated Web Worker.
 
 ## Getting Started
 

@@ -41,7 +41,7 @@ export function MonitoringCard({ service }: MonitoringCardProps) {
             {service?.description}
           </p>
         </div>
-        <PrometheusModal service={{ ...service, icon: CraftedIcon}} />
+        <PrometheusModal service={{ ...service, icon: CraftedIcon }} />
       </CardContent>
     </Card>
   );
