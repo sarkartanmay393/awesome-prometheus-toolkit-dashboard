@@ -53,7 +53,7 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
           <div className="flex items-center max-h-[56px] px-6">
             <div className="flex items-center gap-2">
               {service?.icon}
-              <h3 className="font-[700] text-md text-slate-600">
+              <h3 className="font-[700] text-md text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis">
                 {service?.name}
               </h3>
               <span className="hidden sm:block p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px]">
