@@ -39,7 +39,6 @@ export default function Home() {
           ))
         )}
       </div>
-      <footer className="w-full flex flex-col items-center justify-center font-thin"></footer>
     </main>
   );
 }

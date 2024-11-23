@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 
 import Navbar from "@/components/nav";
 import ContextWrapper from "./context";
+import Bottom from "@/components/Bottom";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
           <div className="md:container mx-8 md:mx-auto">
             <Navbar />
             {children}
+            <Bottom />
           </div>
         </body>
       </ContextWrapper>
