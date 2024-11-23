@@ -40,7 +40,7 @@ export function Search({ onSearch }: Props) {
       <SearchIcon className="absolute left-2.5 top-3 h-4 w-4 text-gray-400" />
       <Input
         placeholder="Search for a component..."
-        className="w-full px-8 rounded-sm"
+        className="w-full px-8 rounded-sm text-xs"
         value={localSearchValue}
         onChange={onChange}
         onKeyDown={handleKeyDown}

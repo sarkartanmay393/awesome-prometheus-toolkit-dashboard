@@ -12,7 +12,6 @@ const CheckIcon = dynamic(() =>
 
 import { Button } from "@/components/ui/button";
 import { Rule, Service } from "@/types";
-import SVGWrapper from "./svg-wrapper";
 import { cn, convertRuleToYamlString } from "@/lib/utils";
 
 type PrometheusModalProps = {
@@ -53,12 +52,7 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
         <div className="flex flex-col py-4 gap-2 h-[56px] border-black">
           <div className="flex items-center max-h-[56px] px-6">
             <div className="flex items-center gap-2">
-              <SVGWrapper
-                svgCode={service?.icon}
-                alt={""}
-                width={20}
-                height={20}
-              />
+              {service?.icon}
               <h3 className="font-[700] text-md text-slate-600">
                 {service?.name}
               </h3>
