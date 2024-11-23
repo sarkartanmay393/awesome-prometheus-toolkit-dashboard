@@ -5,7 +5,7 @@ import { GlobalContext } from "@/app/context";
 import { useState, useEffect, useContext } from "react";
 
 export default function useSearch() {
-  const { setSearchLoading } = useContext(GlobalContext);
+  const { setSearchLoading, setInitialLoading } = useContext(GlobalContext);
   const [filteredData, setFilteredData] = useState<Group[]>([]);
   const [worker, setWorker] = useState<Worker | null>(null);
 
@@ -38,6 +38,7 @@ export default function useSearch() {
           console.log("worker connection established!");
           setFilteredData(results || []);
           setSearchLoading && setSearchLoading(false);
+          setInitialLoading && setInitialLoading(false);
         }
       }
     };

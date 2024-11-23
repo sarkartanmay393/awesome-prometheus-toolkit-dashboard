@@ -24,7 +24,7 @@ export function MonitoringCard({ service }: MonitoringCardProps) {
               width={20}
               height={20}
             />
-            <h3 className="font-[700] text-md text-slate-600">
+            <h3 className="font-[700] text-md text-slate-600 truncate" style={{ whiteSpace: 'wrap' }}> 
               {service?.name}
             </h3>
           </div>

@@ -62,7 +62,7 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
               <h3 className="font-[700] text-md text-slate-600">
                 {service?.name}
               </h3>
-              <span className="p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px]">
+              <span className="hidden sm:block p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px]">
                 {service?.totalRules ?? 0} Rules
               </span>
             </div>

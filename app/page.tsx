@@ -2,23 +2,28 @@
 
 import { Search } from "@/components/search";
 import { MonitoringCard } from "@/components/monitoring-card";
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { Service } from "@/types";
 
 import * as icons from "simple-icons";
 import { getMatchingIcon } from "@/lib/utils";
 import useSearch from "@/hooks/use-search";
+import { GlobalContext } from "./context";
+import HompageSkeleton from "@/components/home-page-skeleton";
 const ICONS = Object.keys(icons);
 
 export default function Home() {
   const { data, onSearch } = useSearch();
+  const { initialLoading } = useContext(GlobalContext);
 
   return (
     <main className="flex flex-col py-12 gap-4">
       <h2 className="text-slate-600 font-[500] text-[20px]">Browse Library</h2>
       <Search onSearch={onSearch} />
       <div className="flex flex-col gap-4">
-        {data.length < 1 ? (
+        {initialLoading ? (
+          <HompageSkeleton />
+        ) : data.length < 1 ? (
           <p>No items found!</p>
         ) : (
           data.map((group) => (
@@ -26,7 +31,7 @@ export default function Home() {
               <h4 className="text-slate-400 font-[700] text-[10px] uppercase">
                 {group.groupName}
               </h4>
-              <div className="mx-auto grid grid-cols-3 gap-6">
+              <div className="mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {group.services?.map((service: Service, index) => {
                   const icon = getMatchingIcon(service, ICONS);
                   service.icon = icon
