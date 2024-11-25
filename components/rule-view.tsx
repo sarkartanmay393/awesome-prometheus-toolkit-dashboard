@@ -47,7 +47,7 @@ const RuleView = ({ rule, count, copiedId, onCopy }: any) => {
             size="sm"
             variant="ghost"
             className="absolute top-0 right-0 flex uppercase gap-[2px] bg-slate-100"
-            onClick={() => onCopy(rule.code, count)}
+            onClick={() => onCopy(code, count)}
           >
             {copiedId === count ? (
               <>
