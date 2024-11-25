@@ -22,7 +22,7 @@ export default function Home() {
         {initialLoading ? (
           <HompageSkeleton />
         ) : data.length < 1 ? (
-          <p>No items found!</p>
+          <p className="text-slate-400 text-sm"> {"> "} No items found!</p>
         ) : (
           data.map((group) => (
             <div key={group.groupName} className="mb-6 gap-4 flex flex-col">
@@ -30,11 +30,15 @@ export default function Home() {
                 {group.groupName}
               </h4>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {group.services?.map((service: Service, index) => {
-                  return (
-                    <MonitoringCard key={index} service={service as any} />
-                  );
-                })}
+                {group.services?.length < 1 ? (
+                  <p className="text-slate-400 text-xs">No services found!</p>
+                ) : (
+                  group.services?.map((service: Service, index) => {
+                    return (
+                      <MonitoringCard key={index} service={service as any} />
+                    );
+                  })
+                )}
               </div>
             </div>
           ))
