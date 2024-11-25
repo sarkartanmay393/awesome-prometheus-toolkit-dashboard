@@ -19,7 +19,7 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
       if (!window || !window.navigator) {
         throw new Error("not a client component");
       }
-      navigator.clipboard.writeText(JSON.stringify(text));
+      navigator.clipboard.writeText(text);
       setCopiedId(id);
       setTimeout(() => setCopiedId(-1), 2000);
     } catch (err) {
