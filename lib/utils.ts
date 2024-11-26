@@ -1,8 +1,8 @@
-import { Rule } from "@/types";
+import { Group, Rule, Service } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import jsYaml from "js-yaml";
 import { twMerge } from "tailwind-merge";
-import { THRESHOLD, FuseOptions } from "./constants";
+import { THRESHOLD, FuseOptions, ICONS } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -79,7 +79,7 @@ export const formatAllData = async (groups: any) => {
                 const matchingJson = exporterJson.find(
                   (json: any) => json?.name?.toLowerCase() === exporterName
                 );
-                console.log(exporterName, matchingJson)
+                // console.log(exporterName, matchingJson)
                 return {
                   ...exporter,
                   rules: exporter?.rules?.map((rule: any) => {
@@ -103,7 +103,7 @@ export const formatAllData = async (groups: any) => {
       return formattedGroup;
     })
   );
-  return formattedGroups;
+  return addIconToMergedJson(formattedGroups);
 };
 
 export const constructExporterPathNames = (service: any) => {
@@ -153,3 +153,51 @@ export const formatFuzzyResult = (fuzzyResult: any[]) => {
     };
   });
 };
+
+export const addIconToMergedJson = (mergedJson: Group[]): Group[] => {
+  return mergedJson.map((group: Group) => ({
+    ...group,
+    services: group.services.map(addIconEleToService),
+  }));
+};
+
+export const addIconEleToService = (service: Service): Service => {
+  let icon = getMatchingIcon(service, ICONS) || "";
+  icon = icon.includes("Hex") ? icon.replace("Hex", "") : icon;
+  service.icon = icon;
+  console.log(icon)
+  return service;
+};
+
+export function getMatchingIcon(service: Service, iconList: string[]): string | undefined {
+  const serviceText = `${service.name} ${service.description}`.toLowerCase();
+  let bestMatch: string | undefined;
+  let highestScore = 0;
+
+  iconList.forEach((iconName: string) => {
+    const iconNameLower = iconName.toLowerCase();
+    let score = 0;
+
+    if (serviceText.includes(iconNameLower)) {
+      score = iconNameLower.length;
+    } else {
+      const nameWords = service.name?.toLowerCase().split(" ") || [];
+      const descriptionWords = service.description?.toLowerCase().split(" ") || [];
+      const allWords = [...nameWords, ...descriptionWords];
+      const allWordsSet = new Set(allWords);
+
+      allWordsSet.forEach((word: string) => {
+        if (iconNameLower.includes(word)) {
+          score += word.length;
+        }
+      });
+    }
+
+    if (score > highestScore) {
+      highestScore = score;
+      bestMatch = iconName;
+    }
+  });
+
+  return bestMatch;
+}

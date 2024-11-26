@@ -34,7 +34,7 @@ export default function useSearch() {
       try {
         const lastObj = LocalStorage.get("finalDataObject");
         if (
-          lastObj &&
+          lastObj && lastObj.value.length &&
           Math.abs(
             Math.floor(new Date().getTime() / 1000) - Number(lastObj.timestamp)
           ) < 999

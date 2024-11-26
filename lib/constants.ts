@@ -31,3 +31,6 @@ export const FuseOptions = {
   shouldSort: true,
   findAllMatches: true,
 };
+
+import * as icons from "@icons-pack/react-simple-icons";
+export const ICONS = Object.keys(icons);

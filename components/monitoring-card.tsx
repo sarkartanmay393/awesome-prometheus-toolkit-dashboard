@@ -10,22 +10,23 @@ interface MonitoringCardProps {
 }
 
 export function MonitoringCard({ service }: MonitoringCardProps) {
-  // const SimpleIconElement = SimpleIcons[
-  //   service.icon as keyof typeof SimpleIcons
-  // ] as SimpleIcons.IconType;
-  // const CraftedIcon = (
-  //   <SimpleIconElement
-  //     color={
-  //       SimpleIcons[`${service.icon}Hex` as keyof typeof SimpleIcons] as string
-  //     }
-  //   />
-  // );
+  const SimpleIconElement = service.icon.length > 0 ? SimpleIcons[
+    service.icon as keyof typeof SimpleIcons
+  ] as SimpleIcons.IconType : null;
+  const CraftedIcon = SimpleIconElement ? (
+    <SimpleIconElement
+      color={
+        SimpleIcons[`${service.icon}Hex` as keyof typeof SimpleIcons] as string
+      }
+    />
+  ) : null;
 
   return (
     <Card className="transition-all shadow-none border-slate-100 border rounded-sm">
       <CardContent className="flex flex-col justify-between p-6 border h-full gap-4">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
+            {CraftedIcon && CraftedIcon}
             <h3 className="font-bold text-md text-slate-600 truncate">
               {service?.name}
             </h3>
@@ -41,7 +42,7 @@ export function MonitoringCard({ service }: MonitoringCardProps) {
             {service?.description}
           </p>
         </div>
-        <PrometheusModal service={{ ...service, icon: <></> }} />
+        <PrometheusModal service={{ ...service }} />
       </CardContent>
     </Card>
   );
