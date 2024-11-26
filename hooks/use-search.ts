@@ -2,7 +2,7 @@
 
 import { Group } from "@/types";
 import { GlobalContext } from "@/app/context";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import CONSTANTS, { FuseOptions } from "@/lib/constants";
 import yaml from "js-yaml";
 import Fuse from "fuse.js";
