@@ -2,7 +2,6 @@
 
 import { useContext } from "react";
 
-import { Service } from "@/types";
 import { Search } from "@/components/search";
 import { MonitoringCard } from "@/components/monitoring-card";
 
@@ -33,7 +32,7 @@ export default function Home() {
                 {group.services?.length < 1 ? (
                   <p className="text-slate-400 text-xs">No services found!</p>
                 ) : (
-                  group.services?.map((service, index) => {
+                  group.services?.map((service: any, index: number) => {
                     return (
                       <MonitoringCard key={index} service={service as any} />
                     );

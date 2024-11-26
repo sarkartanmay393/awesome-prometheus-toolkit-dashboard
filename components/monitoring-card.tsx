@@ -36,7 +36,7 @@ export function MonitoringCard({ service }: MonitoringCardProps) {
           </div>
           <p className="text-[12px] text-slate-400 overflow-hidden text-ellipsis line-clamp-3">
             <span className="p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px] mr-1.5">
-              {service?.exporters?.[0]?.rules?.length || 0} Rules
+              {service?.exporters?.reduce((acc, curr) => acc+(curr?.rules?.length || 0), 0)} Rules
             </span>
             {service?.description}
           </p>

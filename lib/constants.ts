@@ -7,3 +7,23 @@ export default {
     dist: "https://api.github.com/repos/samber/awesome-prometheus-alerts/contents/dist",
   },
 };
+
+export const THRESHOLD = 0.6;
+export const FuseOptions = {
+  keys: [
+    "name",
+    "services.name",
+    "services.description",
+    "services.exporters.name",
+    "services.exporters.rules.name",
+    "services.exporters.rules.description",
+    "services.exporters.rules.query",
+    "services.exporters.rules.severity",
+  ],
+  threshold: THRESHOLD,
+  includeScore: true,
+  includeMatches: true,
+  minMatchCharLength: 1,
+  shouldSort: true,
+  findAllMatches: true,
+};

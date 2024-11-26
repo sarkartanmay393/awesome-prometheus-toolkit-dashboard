@@ -41,6 +41,8 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
         : service?.exporters?.[0]?.rules;
   }
 
+  let ruleCounter = 0;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -61,7 +63,11 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
                 {/* {service?.name} */}
               </h3>
               <span className="hidden sm:block p-1 rounded-full px-1.5 bg-slate-100 uppercase text-slate-400 font-[700] text-[10px]">
-                {service?.exporters?.[0]?.rules?.length || 0} Rules
+                {service?.exporters?.reduce(
+                  (acc, curr) => acc + (curr?.rules?.length || 0),
+                  0
+                )}{" "}
+                Rules
               </span>
             </div>
           </div>
@@ -69,15 +75,17 @@ export default function PrometheusModal({ service }: PrometheusModalProps) {
         </div>
 
         <div className="px-6 py-4 space-y-6 overflow-y-scroll overflow-x-hidden border-black h -[500px]">
-          {service?.exporters?.[0]?.rules?.map((rule, count) => (
-            <RuleView
-              key={count}
-              rule={rule}
-              count={count}
-              copiedId={copiedId}
-              onCopy={copyToClipboard}
-            />
-          ))}
+          {service?.exporters?.flatMap((exp) => {
+            return exp?.rules?.map((rule, count) => (
+              <RuleView
+                key={count}
+                rule={rule}
+                count={++ruleCounter}
+                copiedId={copiedId}
+                onCopy={copyToClipboard}
+              />
+            ));
+          })}
         </div>
       </DialogContent>
     </Dialog>

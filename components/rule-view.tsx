@@ -16,7 +16,7 @@ const RuleView = ({ rule, count, copiedId, onCopy }: any) => {
         )}
       >
         <div className="flex items-center justify-center w-[40px] h-[40px] rounded-full bg-slate-100 text-slate-500 text-[12px] font-[700]">
-          {String(count + 1).padStart(2, "0")}
+          {String(count).padStart(2, "0")}
         </div>
       </div>
       {/* content */}
