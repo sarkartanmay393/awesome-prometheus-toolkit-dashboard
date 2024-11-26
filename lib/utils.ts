@@ -2,8 +2,7 @@ import { Rule } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import jsYaml from "js-yaml";
 import { twMerge } from "tailwind-merge";
-import { THRESHOLD } from "./constants";
-import { FuseOptions } from "./constants";
+import { THRESHOLD, FuseOptions } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -136,16 +135,15 @@ export async function fetchDistRules(service: any) {
   }
 }
 
-export const formatFuzzyResult = (fuzzyResult) => {
-  return fuzzyResult.map((foundItem) => {
+export const formatFuzzyResult = (fuzzyResult: any[]) => {
+  return fuzzyResult.map((foundItem: any) => {
     const { matches, score = 1, item: group } = foundItem;
-    const matchedServices = group.services.filter((service) => {
+    const matchedServices = group.services.filter((service: any) => {
       return matches && matches.length
-        ? matches.some(
-            (match) =>
-              FuseOptions.keys.includes(match.key ?? "") &&
-              [group.groupName, service.name].includes(match.value ?? "") &&
-              score <= THRESHOLD
+        ? matches.some((match: any) =>
+            FuseOptions.keys.includes(match.key ?? "") &&
+            [group.groupName, service.name].includes(match.value ?? "") &&
+            score <= THRESHOLD
           )
         : true;
     });
