@@ -23,8 +23,9 @@ export default function useSearch() {
     } else {
       console.log("no search value");
       setFilteredData(holdFilteredData);
-      setSearchLoading && setSearchLoading(false);
     }
+
+    setSearchLoading && setSearchLoading(false);
   };
 
   useEffect(() => {
