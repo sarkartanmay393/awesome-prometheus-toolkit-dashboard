@@ -70,7 +70,6 @@ export function Search({ onSearch }: Props) {
         onChange={onChange}
         onKeyDown={handleKeyDown}
       />
-
       {searchLoading ? (
         <Loader2Icon className="animate-spin absolute right-2.5 top-3 h-4 w-4 text-slate-500" />
       ) : (

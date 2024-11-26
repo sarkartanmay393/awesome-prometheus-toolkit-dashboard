@@ -33,16 +33,17 @@ export default function useSearch() {
       setInitialLoading && setInitialLoading(true);
       try {
         const lastObj = LocalStorage.get("finalDataObject");
-        // if (
-        //   lastObj &&
-        //   Math.abs(
-        //     Math.floor(new Date().getTime() / 1000) - Number(lastObj.timestamp)
-        //   ) < 999
-        // ) {
-        //   setHoldFilteredData(lastObj.value);
-        //   setFilteredData(lastObj.value);
-        //   return;
-        // }
+        if (
+          lastObj &&
+          Math.abs(
+            Math.floor(new Date().getTime() / 1000) - Number(lastObj.timestamp)
+          ) < 999
+        ) {
+          // using like a cache
+          setHoldFilteredData(lastObj.value);
+          setFilteredData(lastObj.value);
+          return;
+        }
         const response = await fetch(CONSTANTS.raw.rules);
         const text = await response.text();
         const data = yaml.load(text) as { groups: Group[] };

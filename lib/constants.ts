@@ -8,17 +8,21 @@ export default {
   },
 };
 
-export const THRESHOLD = 0.6;
+export const THRESHOLD = 0.65;
 export const FuseOptions = {
   keys: [
     "name",
     "services.name",
     "services.description",
-    "services.exporters.name",
+    "services.exporters.slug",
     "services.exporters.rules.name",
     "services.exporters.rules.description",
     "services.exporters.rules.query",
     "services.exporters.rules.severity",
+    "services.exporters.rules.expr",
+    "services.exporters.rules.for",
+    "services.exporters.rules.alert",
+    "services.exporters.rules.labels",
   ],
   threshold: THRESHOLD,
   includeScore: true,

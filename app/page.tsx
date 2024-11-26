@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <main className="container flex flex-col py-12 gap-4">
-      <h2 className="text-slate-600 font-[500] text-[20px]">Browse Library</h2>
+      <h2 className="text-slate-600 font-medium text-xl">Browse Library</h2>
       <Search onSearch={onSearch} />
       <div className="flex flex-col gap-4 w-full">
         {initialLoading ? (
@@ -25,7 +25,7 @@ export default function Home() {
         ) : (
           data.map((group) => (
             <div key={group.name} className="mb-6 gap-4 flex flex-col">
-              <h4 className="text-slate-400 font-[700] text-[10px] uppercase">
+              <h4 className="text-slate-400 font-bold text-xs uppercase">
                 {group.name}
               </h4>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
