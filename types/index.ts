@@ -18,10 +18,10 @@ export interface Group {
 }
 
 export interface Rule {
-  name: string;
-  description: string;
-  query: string;
-  severity: string;
+  name?: string;
+  description?: string;
+  query?: string;
+  severity?: string;
   for?: string;
   alert?: string;
   expr?: string;

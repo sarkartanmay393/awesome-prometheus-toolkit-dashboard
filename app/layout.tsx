@@ -24,9 +24,11 @@ export default function RootLayout({
         <body
           className={`min-h-screen flex justify-center bg-[#FFFFFF] ${inter.className}`}
         >
-          <div className="container mx-2 sm:mx-8">
+          <div className="w-full">
             <Navbar />
+            <div className="mx-2 sm:mx-8">
             {children}
+            </div>
             <Bottom />
           </div>
         </body>

@@ -9,11 +9,11 @@ export function cn(...inputs: ClassValue[]) {
 
 export const convertRuleToYamlString = (rule: Rule): string => {
   const yamlObject = {
-    alert: rule.alert,
-    expr: rule.expr,
-    for: rule.for,
-    labels: rule.labels,
-    annotations: rule.annotations,
+    alert: rule?.alert,
+    expr: rule?.expr,
+    for: rule?.for,
+    labels: rule?.labels,
+    annotations: rule?.annotations,
   };
 
   return jsYaml.dump(yamlObject, { lineWidth: -1 });

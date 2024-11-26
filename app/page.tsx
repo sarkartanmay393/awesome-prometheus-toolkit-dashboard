@@ -15,7 +15,7 @@ export default function Home() {
   const { initialLoading } = useContext(GlobalContext);
 
   return (
-    <main className="flex flex-col py-12 gap-4">
+    <main className="container flex flex-col py-12 gap-4">
       <h2 className="text-slate-600 font-[500] text-[20px]">Browse Library</h2>
       <Search onSearch={onSearch} />
       <div className="flex flex-col gap-4 w-full">
@@ -25,15 +25,15 @@ export default function Home() {
           <p className="text-slate-400 text-sm"> {"> "} No items found!</p>
         ) : (
           data.map((group) => (
-            <div key={group.groupName} className="mb-6 gap-4 flex flex-col">
+            <div key={group.name} className="mb-6 gap-4 flex flex-col">
               <h4 className="text-slate-400 font-[700] text-[10px] uppercase">
-                {group.groupName}
+                {group.name}
               </h4>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {group.services?.length < 1 ? (
                   <p className="text-slate-400 text-xs">No services found!</p>
                 ) : (
-                  group.services?.map((service: Service, index) => {
+                  group.services?.map((service, index) => {
                     return (
                       <MonitoringCard key={index} service={service as any} />
                     );
