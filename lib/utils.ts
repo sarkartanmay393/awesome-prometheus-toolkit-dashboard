@@ -4,6 +4,22 @@ import jsYaml from "js-yaml";
 import { twMerge } from "tailwind-merge";
 import { THRESHOLD, FuseOptions, ICONS } from "./constants";
 
+export const LocalStorage = {
+  set: (key: string, value: any) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+  get: (key: string) => {
+    const value = localStorage.getItem(key);
+    if (value) {
+      return JSON.parse(value);
+    }
+    return null;
+  },
+  clear: () => {
+    localStorage.clear();
+  },
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -41,22 +57,6 @@ export function createThrottler(fn: Function, delay: number) {
     }
   };
 }
-
-export const LocalStorage = {
-  set: (key: string, value: any) => {
-    localStorage.setItem(key, JSON.stringify(value));
-  },
-  get: (key: string) => {
-    const value = localStorage.getItem(key);
-    if (value) {
-      return JSON.parse(value);
-    }
-    return null;
-  },
-  clear: () => {
-    localStorage.clear();
-  },
-};
 
 export const formatAllData = async (groups: any) => {
   const formattedGroups = await Promise.all(
@@ -108,9 +108,9 @@ export const formatAllData = async (groups: any) => {
 
 export const constructExporterPathNames = (service: any) => {
   const serviceSlug = service?.name?.trim().replace(/\s+/g, "-").toLowerCase();
-  const exporterSlugs = service?.exporters?.map(
-    (exporter: any) => exporter?.slug || false
-  ).filter(Boolean);
+  const exporterSlugs = service?.exporters
+    ?.map((exporter: any) => exporter?.slug || false)
+    .filter(Boolean);
   const ruleDirectory = `https://raw.githubusercontent.com/samber/awesome-prometheus-alerts/master/dist/rules/${serviceSlug}/`;
   return exporterSlugs?.map((slug: string) => `${ruleDirectory}${slug}.yml`);
 };
@@ -140,10 +140,11 @@ export const formatFuzzyResult = (fuzzyResult: any[]) => {
     const { matches, score = 1, item: group } = foundItem;
     const matchedServices = group.services.filter((service: any) => {
       return matches && matches.length
-        ? matches.some((match: any) =>
-            FuseOptions.keys.includes(match.key ?? "") &&
-            [group.groupName, service.name].includes(match.value ?? "") &&
-            score <= THRESHOLD
+        ? matches.some(
+            (match: any) =>
+              FuseOptions.keys.includes(match.key ?? "") &&
+              [group.groupName, service.name].includes(match.value ?? "") &&
+              score <= THRESHOLD
           )
         : true;
     });
@@ -157,34 +158,34 @@ export const formatFuzzyResult = (fuzzyResult: any[]) => {
 export const addIconToMergedJson = (mergedJson: Group[]): Group[] => {
   return mergedJson.map((group: Group) => ({
     ...group,
-    services: group.services.map(addIconEleToService),
+    services: group.services.map(addIconToService),
   }));
 };
 
-export const addIconEleToService = (service: Service): Service => {
+export const addIconToService = (service: Service): Service => {
   let icon = getMatchingIcon(service, ICONS) || "";
   icon = icon.includes("Hex") ? icon.replace("Hex", "") : icon;
   service.icon = icon;
-  console.log(icon)
   return service;
 };
 
-export function getMatchingIcon(service: Service, iconList: string[]): string | undefined {
-  const serviceText = `${service.name} ${service.description}`.toLowerCase();
+export function getMatchingIcon(
+  service: Service,
+  iconList: string[]
+): string | undefined {
+  const serviceText = service?.name?.toLowerCase() ?? "";
   let bestMatch: string | undefined;
   let highestScore = 0;
 
   iconList.forEach((iconName: string) => {
-    const iconNameLower = iconName.toLowerCase();
+    const iconNameLower = iconName.toLowerCase().slice(2);
     let score = 0;
 
     if (serviceText.includes(iconNameLower)) {
       score = iconNameLower.length;
     } else {
       const nameWords = service.name?.toLowerCase().split(" ") || [];
-      const descriptionWords = service.description?.toLowerCase().split(" ") || [];
-      const allWords = [...nameWords, ...descriptionWords];
-      const allWordsSet = new Set(allWords);
+      const allWordsSet = new Set(nameWords);
 
       allWordsSet.forEach((word: string) => {
         if (iconNameLower.includes(word)) {
@@ -199,5 +200,35 @@ export function getMatchingIcon(service: Service, iconList: string[]): string | 
     }
   });
 
-  return bestMatch;
+  // console.log(bestMatch, highestScore)
+  return highestScore > 2 ? hardcodedIconSet(service.name || '', bestMatch || '') : "";
 }
+
+const hardcodedIconSet = (srvName: string, bestMatch: string) => {
+  switch (srvName) {
+    case "Host and hardware": {
+      return "";
+    }
+    case "S.M.A.R.T Device Monitoring": {
+      return "";
+    }
+    case "Blackbox": {
+      return "";
+    }
+    case "Patroni": {
+      return "";
+    }
+    case "Docker containers": {
+      return 'SiDocker';
+    }
+    case "SQL Server": {
+      return "";
+    }
+    case "Windows Server": {
+      return "";
+    }
+    default: {
+      return bestMatch;
+    }
+  }
+};

@@ -37,12 +37,12 @@ export default function useSearch() {
           lastObj && lastObj.value.length &&
           Math.abs(
             Math.floor(new Date().getTime() / 1000) - Number(lastObj.timestamp)
-          ) < 999
+          ) < 200
         ) {
           // using like a cache
-          setHoldFilteredData(lastObj.value);
-          setFilteredData(lastObj.value);
-          return;
+          // setHoldFilteredData(lastObj.value);
+          // setFilteredData(lastObj.value);
+          // return;
         }
         const response = await fetch(CONSTANTS.raw.rules);
         const text = await response.text();

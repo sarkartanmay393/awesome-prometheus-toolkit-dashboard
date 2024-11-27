@@ -33,4 +33,4 @@ export const FuseOptions = {
 };
 
 import * as icons from "@icons-pack/react-simple-icons";
-export const ICONS = Object.keys(icons);
+export const ICONS = Object.keys(icons).filter((icon) => !icon.toLowerCase().includes('hex'));
