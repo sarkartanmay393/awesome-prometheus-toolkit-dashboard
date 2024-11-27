@@ -24,8 +24,8 @@ export function MonitoringCard({ service }: MonitoringCardProps) {
   ) : null;
 
   return (
-    <Card className="transition-all shadow-none border-slate-100 border rounded-sm">
-      <CardContent className="flex flex-col justify-between p-6 border h-full gap-4">
+    <Card className="transition-all shadow-none rounded-sm">
+      <CardContent className="flex flex-col justify-between p-6 h-full gap-4 ">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             {CraftedIcon ? CraftedIcon : <SVGWrapper svgCode={GetDefaultSrvIcon()} width={20} height={20} />}

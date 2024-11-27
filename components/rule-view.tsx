@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { cn, convertRuleToYamlString } from "@/lib/utils";
 import { Check, Files } from "lucide-react";
 
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
+
 const RuleView = ({ rule, count, copiedId, onCopy }: any) => {
   const code = convertRuleToYamlString(rule);
   return (
@@ -32,7 +35,7 @@ const RuleView = ({ rule, count, copiedId, onCopy }: any) => {
         {/* codeblock */}
         <div
           className={cn(
-            "w-full bo rder border-red-500 relative",
+            "w-full bo rder border-red-500 relative overflow-hidden",
             code.trim() == "{}" ? "hidden" : ""
           )}
         >
@@ -41,7 +44,27 @@ const RuleView = ({ rule, count, copiedId, onCopy }: any) => {
             className="w-full bg-slate-50 rounded text-xs overflow-x-scroll p-6 pt-8"
             style={{ whiteSpace: "pre-wrap" }}
           >
-            {code}
+            <SyntaxHighlighter
+              language="yaml"
+              style={{
+                ...coy,
+                keyword: { color: "#22863A" },
+                "class-name": { color: "#22863A" },
+                atrule: { color: "#22863A" },
+                "attr-value": { color: "#22863A" },
+              }}
+              customStyle={{ backgroundColor: "transparent", padding: 0 }}
+              wrapLines={true}
+              lineProps={(lineNumber) => ({
+                style: {
+                  display: "block",
+                  color: "#032F62",
+                  whiteSpace: "pre-wrap",
+                },
+              })}
+            >
+              {code}
+            </SyntaxHighlighter>
           </pre>
           <Button
             size="sm"
